@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ============================================================ -->
+<!-- UPLOAD SCREEN                                                 -->
+<!-- ============================================================ -->
+
+<div id="uploadScreen" class="upload-screen">
+
+    <div class="container">
+
+        <div class="brand">
+            <span class="brand-mark">RA</span>
+            <span class="brand-name">Resume Analyzer</span>
+        </div>
+
+        <h1>See your resume the way a recruiter does.</h1>
+
+        <p>
+            Upload your resume and get AI-powered feedback in seconds &mdash; scored, sorted and ready to act on.
+        </p>
+
+        <div class="upload-box">
+
+            <label for="resume">
+                <span class="upload-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <path d="M12 3v12" stroke-linecap="round"/>
+                        <path d="M7.5 8L12 3l4.5 5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 16.5V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2.5" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                Choose your resume
+                <span class="upload-hint">PDF or DOCX</span>
+            </label>
+
+            <input type="file" id="resume" accept=".pdf,.docx">
+
+            <div class="jd-section">
+                <label class="jd-label" for="jobDescription">
+                    Job Description
+                    <span class="jd-optional">(optional)</span>
+                </label>
+                <textarea
+                    id="jobDescription"
+                    class="jd-textarea"
+                    placeholder="Paste the job description here to get a match score and see which keywords your resume is missing..."
+                    rows="5"
+                ></textarea>
+            </div>
+
+            <button id="analyzeButton">Analyze Resume</button>
+
+        </div>
+
+        <p class="fine-print">Your file is analyzed securely and never stored.</p>
+
+    </div>
+
+</div>
+
+
+<!-- ============================================================ -->
+<!-- INLINE ERROR BANNER                                           -->
+<!-- ============================================================ -->
+
+<div id="errorBox" class="error-box" style="display: none;" role="alert">
+    <span class="error-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4" stroke-linecap="round"/>
+            <circle cx="12" cy="16" r="0.5" fill="currentColor"/>
+        </svg>
+    </span>
+    <span id="errorMessage"></span>
+    <button class="error-close" id="errorClose" aria-label="Dismiss">&times;</button>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- LOADING OVERLAY                                               -->
+<!-- ============================================================ -->
+
+<div id="loading" class="loading-overlay">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <h2>Analyzing Resume&hellip;</h2>
+        <p>Please wait while AI analyzes your resume.</p>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- DASHBOARD (hidden until analysis is ready)                   -->
+<!-- ============================================================ -->
+
+<div id="dashboard" class="dashboard" style="display: none;">
+
+    <!-- Top bar -->
+    <header class="dash-topbar">
+        <div class="dash-topbar-left">
+            <span class="brand-mark">RA</span>
+            <div class="dash-file-info">
+                <span class="dash-title">Resume Analysis</span>
+                <span id="dashFilename" class="dash-filename"></span>
+            </div>
+        </div>
+        <div class="dash-topbar-right">
+            <button id="analyzeAnotherBtn" class="btn-outline">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke-linecap="round"/>
+                    <path d="M3 3v5h5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Analyze Another
+            </button>
+            <button class="btn-solid" onclick="window.print()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 3v12" stroke-linecap="round"/>
+                    <path d="M7.5 14L12 19l4.5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 16.5V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2.5" stroke-linecap="round"/>
+                </svg>
+                Download Report
+            </button>
+        </div>
+    </header>
+
+    <div class="dash-body">
+
+        <!-- ATS Warning Banner (shown only when issues exist) -->
+        <div id="atsBanner" class="ats-banner" style="display: none;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="ats-banner-icon" aria-hidden="true">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+                <path d="M12 9v4" stroke-linecap="round"/>
+                <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
+            </svg>
+            <div>
+                <strong>ATS Compatibility Issues Found</strong>
+                <ul id="atsList" class="ats-banner-list"></ul>
+            </div>
+        </div>
+
+        <!-- Hero row — score rings -->
+        <div class="dash-hero">
+
+            <div class="hero-score-card">
+                <div class="hero-ring-wrap">
+                    <svg class="hero-ring-svg" viewBox="0 0 120 120">
+                        <circle class="ring-track" cx="60" cy="60" r="52"/>
+                        <circle id="scoreRingFill" class="ring-fill ring-fill-score" cx="60" cy="60" r="52"
+                            stroke-dasharray="326.73"
+                            stroke-dashoffset="326.73"/>
+                    </svg>
+                    <div class="hero-ring-inner">
+                        <span id="score" class="hero-score-num">0</span>
+                        <span class="hero-score-denom">/100</span>
+                    </div>
+                </div>
+                <p class="hero-score-label">Overall Score</p>
+            </div>
+
+            <div class="hero-summary">
+                <h2 class="hero-summary-heading">Candidate Profile</h2>
+                <p id="profileSummary" class="hero-summary-text"></p>
+            </div>
+
+            <!-- JD match ring — hidden when no JD -->
+            <div id="jdHeroCard" class="hero-score-card hero-score-card-jd" style="display: none;">
+                <div class="hero-ring-wrap">
+                    <svg class="hero-ring-svg" viewBox="0 0 120 120">
+                        <circle class="ring-track" cx="60" cy="60" r="52"/>
+                        <circle id="jdRingFill" class="ring-fill ring-fill-jd" cx="60" cy="60" r="52"
+                            stroke-dasharray="326.73"
+                            stroke-dashoffset="326.73"/>
+                    </svg>
+                    <div class="hero-ring-inner">
+                        <span id="jdMatchScore" class="hero-score-num">0</span>
+                        <span class="hero-score-denom">/100</span>
+                    </div>
+                </div>
+                <p class="hero-score-label">JD Match</p>
+            </div>
+
+        </div>
+
+        <!-- Section scores bar row -->
+        <div id="sectionScoresSection" class="dash-section-scores" style="display: none;">
+            <h3 class="dash-section-heading">Section Scores</h3>
+            <div id="sectionScoresList" class="section-bars-grid"></div>
+        </div>
+
+        <!-- Main card grid -->
+        <div class="dash-grid">
+
+            <!-- Strengths -->
+            <div class="dash-card dash-card-strengths">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <h3>Key Strengths</h3>
+                </div>
+                <ul id="strengths" class="dash-list"></ul>
+            </div>
+
+            <!-- Areas for Improvement -->
+            <div class="dash-card dash-card-improve">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <h3>Areas for Improvement</h3>
+                </div>
+                <ul id="improvements" class="dash-list"></ul>
+            </div>
+
+            <!-- Missing Skills -->
+            <div class="dash-card dash-card-missing">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    <h3>Missing Skills / Sections</h3>
+                </div>
+                <ul id="missing" class="dash-list"></ul>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="dash-card dash-card-suggest">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <h3>Suggestions</h3>
+                </div>
+                <ul id="suggestions" class="dash-list"></ul>
+            </div>
+
+            <!-- JD Keywords (hidden when no JD) -->
+            <div id="jdMatchSection" class="dash-card dash-card-matched" style="display: none;">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    <h3>Matched Keywords</h3>
+                </div>
+                <ul id="matchedKeywords" class="dash-list dash-tags"></ul>
+            </div>
+
+            <div id="jdMissingSection" class="dash-card dash-card-missing-jd" style="display: none;">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    <h3>Missing JD Keywords</h3>
+                </div>
+                <ul id="missingJdKeywords" class="dash-list dash-tags"></ul>
+            </div>
+
+            <!-- Section Suggestions (full width) -->
+            <div id="sectionSuggestionsSection" class="dash-card dash-card-section-suggest dash-card-full" style="display: none;">
+                <div class="dash-card-header">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <h3>Section Improvement Suggestions</h3>
+                </div>
+                <ul id="sectionSuggestionsList" class="dash-list"></ul>
+            </div>
+
+        </div>
+        <!-- end dash-grid -->
+
+    </div>
+    <!-- end dash-body -->
+
+</div>
+<!-- end dashboard -->
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
