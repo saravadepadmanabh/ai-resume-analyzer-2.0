@@ -303,3 +303,15 @@ All AI-generated code and suggestions were reviewed and tested before being acce
 | Gemini quota exceeded | Rate-limit error banner |
 | Click Download Report | Browser print dialog opens |
 | Click Analyze Another | Upload screen restored, form cleared |
+
+## Live Demo
+
+The latest version of the AI Resume Analyzer is deployed and available here:
+
+**Live Application:**
+https://ai-resume-analyzer-2-0-frontend.onrender.com/
+
+> **Note:** The application uses the Gemini AI API for resume analysis. The Gemini API may have a limited number of requests depending on the available API quota. If the API quota/limit is exhausted and the application stops generating AI-based analysis, please contact **[padmanabhsaravade@gmail.com](mailto:padmanabhsaravade@gmail.com)** to request a new API key for further usage.
+
+
+
