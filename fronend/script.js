@@ -135,7 +135,7 @@ analyzeButton.addEventListener("click", async function () {
   loading.style.display = "flex";
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/upload", {
+    const response = await fetch("https://ai-resume-analyzer-2-0.onrender.com/upload", {
       method: "POST",
       body: formData,
     });
