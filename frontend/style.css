@@ -882,57 +882,84 @@ mark.kw-highlight {
     /* ── Page setup ───────────────────────────────────────────── */
     @page {
         size: A4 portrait;
-        margin: 14mm 16mm 14mm 16mm;
+        margin: 12mm 14mm 12mm 14mm;
     }
 
-    /* ── Hide everything except the dashboard ─────────────────── */
+    /* ── Hide non-report elements ─────────────────────────────── */
     .upload-screen,
     #errorBox,
     #loading,
     .btn-outline,
     .btn-solid { display: none !important; }
 
-    /* ── Base reset ───────────────────────────────────────────── */
-    *  { box-shadow: none !important; transition: none !important; }
+    /* ── Global reset for print ───────────────────────────────── */
+    * {
+        box-shadow: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
 
     body {
         background: #fff !important;
         color: #111 !important;
-        font-size: 10pt;
+        font-size: 9pt;
         font-family: "Inter", Arial, sans-serif;
-        line-height: 1.45;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0;
     }
 
-    /* ── Dashboard wrapper — plain block ──────────────────────── */
+    /* ── Dashboard — plain block flow ────────────────────────── */
     .dashboard {
         display: block !important;
         background: #fff !important;
+        width: 100% !important;
     }
 
-    /* ── Top bar — minimal print header ──────────────────────── */
+    /* ── Top bar ──────────────────────────────────────────────── */
     .dash-topbar {
         position: static !important;
         display: flex !important;
         align-items: center;
         justify-content: space-between;
         border: none !important;
-        border-bottom: 1.5pt solid #333 !important;
-        padding: 0 0 6pt !important;
-        margin-bottom: 12pt !important;
+        border-bottom: 2pt solid #111 !important;
+        padding: 0 0 5pt !important;
+        margin-bottom: 10pt !important;
         height: auto !important;
+        width: 100% !important;
     }
 
-    .dash-title    { font-size: 13pt; font-weight: 700; color: #111; }
-    .dash-filename { font-size: 9pt;  color: #555; max-width: none; }
+    .dash-topbar-left  { display: flex !important; align-items: center; gap: 8pt; }
+    .dash-topbar-right { display: none !important; }
 
-    /* ── Dashboard body — full width, no padding ──────────────── */
+    .brand-mark {
+        width: 22pt !important;
+        height: 22pt !important;
+        font-size: 9pt !important;
+        border-radius: 3pt !important;
+        background: #111 !important;
+        color: #fff !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .dash-file-info { display: flex !important; flex-direction: column; }
+    .dash-title     { font-size: 13pt !important; font-weight: 700 !important; color: #111 !important; line-height: 1.2; }
+    .dash-filename  { font-size: 8pt !important;  color: #666 !important; max-width: none !important; }
+
+    /* ── Dashboard body ───────────────────────────────────────── */
     .dash-body {
         padding: 0 !important;
         max-width: 100% !important;
         width: 100% !important;
+        margin: 0 !important;
     }
 
-    /* ── Force hidden result sections to show ─────────────────── */
+    /* ── Force hidden sections to print ──────────────────────── */
     .ats-banner,
     #jdHeroCard,
     #jdMatchSection,
@@ -944,200 +971,299 @@ mark.kw-highlight {
 
     /* ── ATS banner ───────────────────────────────────────────── */
     .ats-banner {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 8pt !important;
         border: 1pt solid #e8a830 !important;
         border-left: 3pt solid #b8720b !important;
         background: #fffbf4 !important;
         padding: 7pt 10pt !important;
-        margin-bottom: 10pt !important;
-        font-size: 9pt;
+        margin-bottom: 8pt !important;
+        font-size: 8.5pt !important;
         color: #5a2e04 !important;
         page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
-    .ats-banner-icon { display: none; }
+    .ats-banner-icon { display: none !important; }
 
-    /* ── Hero row — replace flex rings with a simple score row ── */
+    .ats-banner strong {
+        font-size: 8.5pt !important;
+        font-weight: 700 !important;
+        color: #5a2e04 !important;
+        margin-bottom: 4pt !important;
+    }
+
+    .ats-banner-list li { font-size: 8.5pt !important; line-height: 1.4 !important; }
+
+    /* ── Hero row ─────────────────────────────────────────────── */
+    /* Completely override flex/SVG layout — use a table for reliability */
     .dash-hero {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: stretch;
-        gap: 0 !important;
+        display: table !important;
+        width: 100% !important;
         border: 1pt solid #ccc !important;
-        border-radius: 6pt !important;
+        border-radius: 0 !important;
         padding: 0 !important;
-        margin-bottom: 10pt !important;
-        page-break-inside: avoid;
-        overflow: hidden;
+        margin-bottom: 8pt !important;
+        page-break-inside: avoid !important;
+        table-layout: fixed;
     }
 
-    /* Score boxes — replace SVG rings */
-    .hero-score-card {
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 10pt 14pt !important;
-        border-right: 1pt solid #e0e0e0;
-        min-width: 72pt;
-        background: #f8f8f8 !important;
-        flex-shrink: 0;
-    }
-
-    .hero-score-card-jd {
-        border-left: 1pt solid #e0e0e0 !important;
-        border-right: none !important;
-        padding-left: 14pt !important;
-    }
-
-    /* Hide SVG rings — show only the text numbers */
-    .hero-ring-svg { display: none !important; }
-
-    .hero-ring-inner {
-        position: static !important;
-        display: flex !important;
-        flex-direction: row;
-        align-items: baseline;
-        gap: 1pt;
-    }
-
-    .hero-score-num  { font-size: 22pt; font-weight: 700; color: #1d4e4b; }
-    .hero-score-denom { font-size: 9pt;  color: #777; }
-    .hero-score-label {
-        font-size: 7.5pt;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #555;
-        margin-top: 3pt;
-    }
-
-    /* Profile summary fills the remaining hero space */
+    /* Each score card and summary become table cells */
+    .hero-score-card,
     .hero-summary {
-        flex: 1 !important;
-        border-left: 1pt solid #e0e0e0 !important;
-        padding: 10pt 14pt !important;
+        display: table-cell !important;
+        vertical-align: middle !important;
+        padding: 8pt 10pt !important;
+        border: none !important;
+        border-right: 1pt solid #ddd !important;
+    }
+
+    .hero-summary {
+        width: 100% !important;
+        border-right: none !important;
+        vertical-align: top !important;
+    }
+
+    /* Hide the SVG ring completely */
+    .hero-ring-wrap {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
         display: block !important;
     }
 
-    .hero-summary-heading {
-        font-size: 7.5pt;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #555;
-        margin-bottom: 5pt;
+    .hero-ring-svg { display: none !important; }
+
+    /* Score number displayed directly */
+    .hero-ring-inner {
+        position: static !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: baseline !important;
+        justify-content: center !important;
+        gap: 1pt !important;
+        width: auto !important;
+        height: auto !important;
     }
 
-    .hero-summary-text { font-size: 9.5pt; color: #222; line-height: 1.5; }
+    .hero-score-num {
+        font-size: 24pt !important;
+        font-weight: 700 !important;
+        color: #1d4e4b !important;
+        line-height: 1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .hero-score-denom {
+        font-size: 9pt !important;
+        color: #888 !important;
+        font-weight: 400 !important;
+    }
+
+    .hero-score-label {
+        font-size: 7pt !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: #666 !important;
+        text-align: center !important;
+        margin-top: 3pt !important;
+        display: block !important;
+    }
+
+    .hero-score-card {
+        width: 60pt !important;
+        min-width: 60pt !important;
+        background: #f8f9f8 !important;
+        text-align: center !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .hero-score-card-jd {
+        border-left: 1pt solid #ddd !important;
+        border-right: none !important;
+        width: 60pt !important;
+        min-width: 60pt !important;
+    }
+
+    .hero-summary-heading {
+        font-size: 7pt !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: #666 !important;
+        margin-bottom: 4pt !important;
+        display: block !important;
+    }
+
+    .hero-summary-text {
+        font-size: 8.5pt !important;
+        color: #222 !important;
+        line-height: 1.5 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+    }
 
     /* ── Section score bars ───────────────────────────────────── */
     .dash-section-scores {
+        display: block !important;
         border: 1pt solid #ccc !important;
-        border-radius: 6pt !important;
-        padding: 8pt 12pt !important;
-        margin-bottom: 10pt !important;
-        page-break-inside: avoid;
+        border-radius: 0 !important;
+        padding: 8pt 10pt !important;
+        margin-bottom: 8pt !important;
+        page-break-inside: avoid !important;
     }
 
     .dash-section-heading {
-        font-size: 7.5pt;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #555;
-        margin-bottom: 8pt;
+        font-size: 7pt !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        color: #666 !important;
+        margin-bottom: 6pt !important;
     }
 
     .section-bars-grid {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 8pt 20pt !important;
+        gap: 6pt 16pt !important;
     }
 
-    .section-score-label { margin-bottom: 3pt; }
-    .section-name  { font-size: 8.5pt; font-weight: 600; color: #111; }
-    .section-pct   { font-size: 8pt;   color: #555; }
+    .section-score-row { page-break-inside: avoid; }
+    .section-score-label { margin-bottom: 2pt !important; }
+    .section-name { font-size: 8pt !important; font-weight: 600 !important; color: #111 !important; }
+    .section-pct  { font-size: 7.5pt !important; color: #555 !important; }
 
-    .section-bar-track { height: 5pt !important; }
-
-    .bar-good    { background-color: #1d7a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .bar-average { background-color: #b8720b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .bar-weak    { background-color: #b3401f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-    /* ── Card grid ─────────────────────────────────────────────── */
-    .dash-grid {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 8pt !important;
-    }
-
-    .dash-card-full { grid-column: 1 / -1 !important; }
-
-    .dash-card {
-        border: 1pt solid #ddd !important;
-        border-top-width: 2.5pt !important;
-        border-radius: 5pt !important;
-        padding: 8pt 10pt !important;
-        page-break-inside: avoid;
-        background: #fff !important;
-    }
-
-    /* Preserve card top-border colours */
-    .dash-card-strengths       { border-top-color: #1d7a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dash-card-improve         { border-top-color: #b8720b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dash-card-missing         { border-top-color: #b3401f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dash-card-suggest         { border-top-color: #2455a4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dash-card-matched         { border-top-color: #1d7a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dash-card-missing-jd      { border-top-color: #b3401f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dash-card-section-suggest { border-top-color: #1d4e4b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-    .dash-card-header {
-        margin-bottom: 6pt;
-        gap: 5pt;
-    }
-
-    .dash-card-header svg { display: none; }
-
-    .dash-card-header h3 {
-        font-size: 9pt;
-        font-weight: 700;
-        color: #111 !important;
-    }
-
-    /* ── Lists ─────────────────────────────────────────────────── */
-    .dash-list { gap: 4pt !important; }
-
-    .dash-list li {
-        font-size: 8.5pt !important;
-        color: #333 !important;
-        padding-left: 12pt !important;
-        line-height: 1.4 !important;
-    }
-
-    .dash-list li::before {
-        top: 5pt !important;
-        width: 4pt !important;
-        height: 4pt !important;
-        opacity: 1 !important;
-    }
-
-    /* Keyword chips — flatten to a simple comma list */
-    .dash-tags {
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        gap: 4pt !important;
-    }
-
-    .dash-tags li {
-        background: #f0f0f0 !important;
-        border: 0.5pt solid #ccc !important;
+    .section-bar-track {
+        height: 5pt !important;
+        background: #e0e0e0 !important;
         border-radius: 99pt !important;
-        padding: 2pt 7pt !important;
-        font-size: 8pt !important;
-        color: #111 !important;
+        overflow: hidden !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+
+    .bar-good    { background: #1d7a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .bar-average { background: #b8720b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .bar-weak    { background: #b3401f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* ── Card grid ────────────────────────────────────────────── */
+    .dash-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 7pt !important;
+        page-break-inside: auto !important;
+    }
+
+    .dash-card-full {
+        grid-column: 1 / -1 !important;
+    }
+
+    .dash-card {
+        display: block !important;
+        border: 1pt solid #ddd !important;
+        border-top: 2.5pt solid #ddd !important;
+        border-radius: 0 !important;
+        padding: 7pt 9pt !important;
+        page-break-inside: avoid !important;
+        background: #fff !important;
+        break-inside: avoid !important;
+    }
+
+    /* Card top border colours */
+    .dash-card-strengths        { border-top-color: #1d7a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dash-card-improve          { border-top-color: #b8720b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dash-card-missing          { border-top-color: #b3401f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dash-card-suggest          { border-top-color: #2455a4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dash-card-matched          { border-top-color: #1d7a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dash-card-missing-jd       { border-top-color: #b3401f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dash-card-section-suggest  { border-top-color: #1d4e4b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .dash-card-header {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4pt !important;
+        margin-bottom: 5pt !important;
+    }
+
+    .dash-card-header svg { display: none !important; }
+
+    .dash-card-header h3 {
+        font-size: 8.5pt !important;
+        font-weight: 700 !important;
+        color: #111 !important;
+        margin: 0 !important;
+    }
+
+    /* ── Lists ────────────────────────────────────────────────── */
+    .dash-list {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 3pt !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+
+    .dash-list li {
+        font-size: 8pt !important;
+        color: #333 !important;
+        padding-left: 10pt !important;
+        line-height: 1.4 !important;
+        position: relative !important;
+        word-wrap: break-word !important;
+    }
+
+    .dash-list li::before {
+        content: "" !important;
+        position: absolute !important;
+        left: 1pt !important;
+        top: 5pt !important;
+        width: 4pt !important;
+        height: 4pt !important;
+        border-radius: 50% !important;
+        background: #555 !important;
+        opacity: 1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .dash-card-strengths .dash-list li::before   { background: #1d7a5f !important; }
+    .dash-card-improve .dash-list li::before     { background: #b8720b !important; }
+    .dash-card-missing .dash-list li::before     { background: #b3401f !important; }
+    .dash-card-suggest .dash-list li::before     { background: #2455a4 !important; }
+    .dash-card-matched .dash-list li::before     { background: #1d7a5f !important; }
+    .dash-card-missing-jd .dash-list li::before  { background: #b3401f !important; }
+    .dash-card-section-suggest .dash-list li::before { background: #1d4e4b !important; }
+
+    /* ── Keyword tag chips ────────────────────────────────────── */
+    .dash-tags {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 3pt !important;
+        list-style: none !important;
+        padding: 0 !important;
+    }
+
+    .dash-tags li {
+        padding: 1pt 6pt !important;
+        border: 0.5pt solid #ccc !important;
+        border-radius: 99pt !important;
+        font-size: 7.5pt !important;
+        color: #111 !important;
+        background: #f0f0f0 !important;
+        line-height: 1.5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .dash-tags li::before { display: none !important; }
 
     .dash-card-matched .dash-tags li {
         background: #eaf6f0 !important;
@@ -1151,14 +1277,17 @@ mark.kw-highlight {
         color: #b3401f !important;
     }
 
-    /* ── Keyword highlights ────────────────────────────────────── */
+    /* ── Keyword highlights ───────────────────────────────────── */
     mark.kw-highlight {
         background: none !important;
         color: inherit !important;
-        font-weight: 700;
-        text-decoration: underline;
+        font-weight: 700 !important;
+        text-decoration: underline !important;
     }
 
-    /* ── Section suggestion label ──────────────────────────────── */
-    .section-suggestion-label { font-weight: 700; color: #111; }
+    /* ── Section suggestion label ─────────────────────────────── */
+    .section-suggestion-label {
+        font-weight: 700 !important;
+        color: #111 !important;
+    }
 }
